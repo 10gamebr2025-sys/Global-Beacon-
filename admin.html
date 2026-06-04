@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — ကမ္ဘာ့အလင်းတန်း</title>
+<link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#c8102e;--gold:#f5c518;--green:#1a6b2e;--dark:#0d1117;--dark2:#161b22;--dark3:#1e2530;--text:#e8dcc8;--muted:#8892a4;--border:rgba(200,16,46,0.25)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Padauk',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+.stripe{height:5px;background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 10px,var(--gold) 10px,var(--gold) 16px,var(--green) 16px,var(--green) 26px,var(--gold) 26px,var(--gold) 32px)}
+header{background:var(--dark2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--red)}
+.admin-title{font-family:'Playfair Display',serif;color:var(--gold);font-size:18px}
+.admin-sub{font-size:10px;color:var(--muted);letter-spacing:2px}
+.back-btn{background:var(--red);color:var(--gold);border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-family:'Padauk',sans-serif;font-size:13px;font-weight:700}
+.container{max-width:900px;margin:0 auto;padding:24px 20px}
+.tabs{display:flex;gap:4px;margin-bottom:20px}
+.tab{background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:4px;cursor:pointer;font-family:'Padauk',sans-serif;font-size:13px;transition:all 0.2s}
+.tab.active{background:var(--red);color:var(--gold);border-color:var(--red);font-weight:700}
+.panel{display:none}
+.panel.active{display:block}
+/* FORM */
+.form-group{margin-bottom:16px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+input[type=text],input[type=url],select,textarea{width:100%;background:var(--dark2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:5px;font-family:'Padauk',sans-serif;font-size:13px;transition:border-color 0.2s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+textarea{resize:vertical;line-height:1.7}
+select option{background:var(--dark2)}
+.btn-primary{background:var(--red);color:var(--gold);border:none;padding:10px 24px;border-radius:5px;cursor:pointer;font-family:'Padauk',sans-serif;font-size:14px;font-weight:700;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.85}
+.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red);padding:6px 12px;border-radius:4px;cursor:pointer;font-size:11px;font-family:'Padauk',sans-serif}
+.success{background:rgba(26,107,46,0.2);border:1px solid var(--green);color:#7fe89a;padding:10px 14px;border-radius:5px;font-size:13px;margin-bottom:16px;display:none}
+/* POSTS TABLE */
+.posts-table{width:100%;border-collapse:collapse}
+.posts-table th{text-align:left;font-size:11px;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px}
+.posts-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;vertical-align:top}
+.posts-table tr:hover td{background:var(--dark2)}
+.post-title-cell{max-width:320px;font-weight:700;color:var(--text)}
+.post-cat-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:2px;background:rgba(200,16,46,0.2);color:var(--red);margin-left:6px}
+/* ADS SECTION */
+.ad-slot{background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:14px}
+.ad-slot h3{font-size:13px;color:var(--gold);margin-bottom:10px;font-family:'Playfair Display',serif}
+.ad-slot p{font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6}
+.ad-code{width:100%;background:var(--dark);border:1px solid var(--border);color:#7fe89a;padding:10px;border-radius:4px;font-family:monospace;font-size:11px;resize:vertical}
+.config-box{background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px}
+.config-box h3{font-size:14px;color:var(--gold);margin-bottom:4px;font-family:'Playfair Display',serif}
+.config-box p{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+.warning-box{background:rgba(200,16,46,0.1);border:1px solid var(--red);border-radius:6px;padding:12px;font-size:12px;color:#f0a0a0;margin-bottom:16px;line-height:1.7}
+.step-list{counter-reset:steps}
+.step-list li{counter-increment:steps;margin-bottom:8px;font-size:12px;color:var(--muted);line-height:1.7;list-style:none;padding-left:24px;position:relative}
+.step-list li::before{content:counter(steps);position:absolute;left:0;background:var(--red);color:var(--gold);width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;top:2px}
+.step-list a{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<header>
+  <div>
+    <div class="admin-title">✏️ Admin Panel</div>
+    <div class="admin-sub">ကမ္ဘာ့အလင်းတန်း — Global Beacon</div>
+  </div>
+  <button class="back-btn" onclick="window.location.href='index.html'">← ဝက်ဆိုဒ်သို့ ပြန်သွား</button>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('write',this)">✍️ သတင်းရေးမည်</button>
+    <button class="tab" onclick="showTab('posts',this)">📋 သတင်းများ</button>
+    <button class="tab" onclick="showTab('ads',this)">💰 ကြော်ငြာ</button>
+    <button class="tab" onclick="showTab('config',this)">⚙️ ဆက်တင်</button>
+  </div>
+
+  <!-- WRITE TAB -->
+  <div class="panel active" id="tab-write">
+    <div class="success" id="write-success">✅ သတင်း အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ!</div>
+    <div class="form-group">
+      <label>ခေါင်းစဉ် *</label>
+      <input type="text" id="f-title" placeholder="သတင်းခေါင်းစဉ် ရိုက်ထည့်ပါ...">
+    </div>
+    <div class="form-group">
+      <label>အမျိုးအစား</label>
+      <select id="f-cat">
+        <option value="နိုင်ငံရေး">နိုင်ငံရေး</option>
+        <option value="စီးပွားရေး">စီးပွားရေး</option>
+        <option value="အားကစား">အားကစား</option>
+        <option value="စိုက်ပျိုးရေး">စိုက်ပျိုးရေး</option>
+        <option value="မြန်မာပြည်သတင်း">မြန်မာပြည်သတင်း</option>
+        <option value="ကမ္ဘာ့သတင်း">ကမ္ဘာ့သတင်း</option>
+        <option value="နည်းပညာ">နည်းပညာ</option>
+        <option value="ကျန်းမာရေး">ကျန်းမာရေး</option>
+        <option value="အခြား">အခြား</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>ရေးသားသူ</label>
+      <input type="text" id="f-author" placeholder="ဥပမာ: ဒေါ်မြသောင်း (မထည့်လျှင် Global Beacon ဖြင့် ပြမည်)">
+    </div>
+    <div class="form-group">
+      <label>သတင်းအကြောင်းအရာ *</label>
+      <textarea id="f-content" rows="12" placeholder="သတင်းအကြောင်းအရာ ရေးပါ...&#10;&#10;မြန်မာပြည်ကသတင်းဆိုလဲ ဒီနေရာမှာ ရေးပြီး တင်နိုင်ပါသည်။&#10;&#10;ကြိုက်သလောက် ရေးနိုင်ပါသည်..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>မူရင်းလင့်ခ် (ရင်းမြစ်ရှိပါက)</label>
+      <input type="url" id="f-url" placeholder="https://...">
+    </div>
+    <button class="btn-primary" onclick="savePost()">📤 သတင်းတင်မည်</button>
+  </div>
+
+  <!-- POSTS TAB -->
+  <div class="panel" id="tab-posts">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--muted)">မင်း၏ ရေးသားထားသော သတင်းများ</div>
+      <button class="btn-danger" onclick="clearAll()">🗑️ အားလုံးဖျက်မည်</button>
+    </div>
+    <table class="posts-table">
+      <thead>
+        <tr><th>ခေါင်းစဉ်</th><th>အမျိုးအစား</th><th>ရက်စွဲ</th><th>ဖျက်ရန်</th></tr>
+      </thead>
+      <tbody id="posts-tbody"></tbody>
+    </table>
+    <div id="no-posts" style="text-align:center;padding:40px;color:var(--muted);font-size:13px">သတင်းများ မရှိသေးပါ — "သတင်းရေးမည်" တက်ဘ်မှ စတင်ပါ</div>
+  </div>
+
+  <!-- ADS TAB -->
+  <div class="panel" id="tab-ads">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.7">
+      ကြော်ငြာ code (Google AdSense သို့မဟုတ် ကိုယ်ပိုင်) ကို ဤနေရာတွင် ထည့်ပြီး Save နှိပ်ပါ။ Website တွင် ချက်ချင်း ပြမည်။
+    </div>
+
+    <div class="ad-slot">
+      <h3>📌 ထိပ်ဆုံး ကြော်ငြာ (728×90 — Leaderboard)</h3>
+      <p>Website ၏ ထိပ်ဆုံး — လူမြင်အများဆုံး နေရာ</p>
+      <textarea class="ad-code" id="ad-top" rows="4" placeholder="Google AdSense code သို့မဟုတ် ကိုယ်ပိုင် HTML ထည့်ပါ...&#10;&#10;ဥပမာ:&#10;&lt;img src='your-banner.jpg' width='728' height='90'&gt;"></textarea>
+      <button class="btn-primary" style="margin-top:10px" onclick="saveAd('ad-top')">💾 သိမ်းမည်</button>
+    </div>
+
+    <div class="ad-slot">
+      <h3>📌 ဘေးဘာ ကြော်ငြာ ၁ (300×250)</h3>
+      <p>ညာဘက် sidebar အပေါ်ပိုင်း</p>
+      <textarea class="ad-code" id="ad-side1" rows="4" placeholder="AdSense code ထည့်ပါ..."></textarea>
+      <button class="btn-primary" style="margin-top:10px" onclick="saveAd('ad-side1')">💾 သိမ်းမည်</button>
+    </div>
+
+    <div class="ad-slot">
+      <h3>📌 ဘေးဘာ ကြော်ငြာ ၂ (300×250)</h3>
+      <p>ညာဘက် sidebar အောက်ပိုင်း</p>
+      <textarea class="ad-code" id="ad-side2" rows="4" placeholder="AdSense code ထည့်ပါ..."></textarea>
+      <button class="btn-primary" style="margin-top:10px" onclick="saveAd('ad-side2')">💾 သိမ်းမည်</button>
+    </div>
+
+    <div class="ad-slot">
+      <h3>📌 အလယ် ကြော်ငြာ (728×90)</h3>
+      <p>သတင်းများ၏ အလယ်ပိုင်း</p>
+      <textarea class="ad-code" id="ad-mid" rows="4" placeholder="AdSense code ထည့်ပါ..."></textarea>
+      <button class="btn-primary" style="margin-top:10px" onclick="saveAd('ad-mid')">💾 သိမ်းမည်</button>
+    </div>
+
+    <div style="background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.2);border-radius:6px;padding:14px;font-size:12px;color:var(--muted);line-height:1.8">
+      💡 <strong style="color:var(--gold)">Google AdSense ဝင်ငွေ ရှာနည်း:</strong><br>
+      ① google.com/adsense တွင် Apply လုပ်ပါ<br>
+      ② Approve ဖြစ်ပြီးပါက Ad code ရပါမည်<br>
+      ③ ထိုcode ကို ဤနေရာတွင် ထည့်ပါ<br>
+      ④ လူကြည့်တိုင်း ဝင်ငွေ ရမည်
+    </div>
+  </div>
+
+  <!-- CONFIG TAB -->
+  <div class="panel" id="tab-config">
+    <div class="config-box">
+      <h3>🔑 NewsData.io API Key</h3>
+      <p>အစစ်အမှန် ကမ္ဘာ့သတင်းများ ဆွဲရန် API key လိုသည်။ ယခု demo သတင်းများ ပြနေသည်။</p>
+      <ol class="step-list">
+        <li><a href="https://newsdata.io" target="_blank">newsdata.io</a> တွင် အခမဲ့ Register လုပ်ပါ</li>
+        <li>Dashboard → API Key ကူးပါ</li>
+        <li>index.html ဖိုင်တွင် <code style="color:var(--gold)">YOUR_NEWSDATA_IO_KEY</code> နေရာတွင် ထည့်ပါ</li>
+      </ol>
+      <div class="form-group" style="margin-top:14px">
+        <label>API Key</label>
+        <input type="text" id="cfg-apikey" placeholder="pub_xxxxxxxxxxxxxxxxxx">
+      </div>
+      <button class="btn-primary" onclick="saveConfig('apikey')">💾 သိမ်းမည်</button>
+    </div>
+
+    <div class="config-box">
+      <h3>🌐 GitHub Pages — အခမဲ့ Hosting</h3>
+      <p>Website ကို internet ပေါ်တင်ရန် အောက်ပါ အဆင့်များ လုပ်ဆောင်ပါ:</p>
+      <ol class="step-list">
+        <li><a href="https://github.com" target="_blank">github.com</a> တွင် Account ဖွင့်ပါ</li>
+        <li>New Repository → အမည်ပေး → Public ရွေးပါ</li>
+        <li>index.html နှင့် admin.html ဖိုင်များ Upload လုပ်ပါ</li>
+        <li>Settings → Pages → Branch: main → Save</li>
+        <li>မိနစ် ၂-၃ အကြာတွင် <code style="color:var(--gold)">username.github.io/repo-name</code> တွင် live ဖြစ်မည်</li>
+      </ol>
+    </div>
+
+    <div class="config-box">
+      <h3>📱 Netlify — အကောင်းဆုံး အခမဲ့ Hosting</h3>
+      <p>GitHub ထက် ပိုလွယ်ကူသည် — drag & drop ပဲ လုပ်ရသည်:</p>
+      <ol class="step-list">
+        <li><a href="https://netlify.com" target="_blank">netlify.com</a> တွင် Account ဖွင့်ပါ</li>
+        <li>Dashboard တွင် folder ကို drag & drop ဆွဲချပါ</li>
+        <li>ချက်ချင်း live ဖြစ်သည် — custom domain လည်း ချိတ်နိုင်သည်</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="stripe"></div>
+
+<script>
+function showTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name==='posts') renderPostsTable();
+}
+
+function savePost() {
+  const title = document.getElementById('f-title').value.trim();
+  const content = document.getElementById('f-content').value.trim();
+  if (!title || !content) { alert('ခေါင်းစဉ်နှင့် အကြောင်းအရာ ဖြည့်ပါ'); return; }
+
+  const posts = JSON.parse(localStorage.getItem('gb_posts')||'[]');
+  posts.push({
+    id: Date.now(),
+    title,
+    content,
+    category: document.getElementById('f-cat').value,
+    author: document.getElementById('f-author').value || 'Global Beacon',
+    url: document.getElementById('f-url').value,
+    date: new Date().toLocaleDateString('my-MM')
+  });
+  localStorage.setItem('gb_posts', JSON.stringify(posts));
+
+  document.getElementById('f-title').value='';
+  document.getElementById('f-content').value='';
+  document.getElementById('f-author').value='';
+  document.getElementById('f-url').value='';
+
+  const s = document.getElementById('write-success');
+  s.style.display='block';
+  setTimeout(()=>s.style.display='none',3000);
+}
+
+function renderPostsTable() {
+  const posts = JSON.parse(localStorage.getItem('gb_posts')||'[]');
+  const tbody = document.getElementById('posts-tbody');
+  const noMsg = document.getElementById('no-posts');
+  if (!posts.length) { tbody.innerHTML=''; noMsg.style.display='block'; return; }
+  noMsg.style.display='none';
+  tbody.innerHTML = [...posts].reverse().map(p=>`
+    <tr>
+      <td class="post-title-cell">${p.title}<span class="post-cat-badge">${p.category}</span></td>
+      <td style="color:var(--muted)">${p.category}</td>
+      <td style="color:var(--muted);white-space:nowrap">${p.date}</td>
+      <td><button class="btn-danger" onclick="deletePost(${p.id})">🗑️</button></td>
+    </tr>
+  `).join('');
+}
+
+function deletePost(id) {
+  if (!confirm('ဤသတင်းကို ဖျက်မည်လား?')) return;
+  const posts = JSON.parse(localStorage.getItem('gb_posts')||'[]');
+  localStorage.setItem('gb_posts', JSON.stringify(posts.filter(p=>p.id!==id)));
+  renderPostsTable();
+}
+
+function clearAll() {
+  if (!confirm('သတင်းအားလုံး ဖျက်မည်လား?')) return;
+  localStorage.removeItem('gb_posts');
+  renderPostsTable();
+}
+
+function saveAd(id) {
+  const code = document.getElementById(id).value;
+  localStorage.setItem('gb_'+id, code);
+  alert('✅ ကြော်ငြာ သိမ်းပြီးပါပြီ!');
+}
+
+function saveConfig(key) {
+  const val = document.getElementById('cfg-'+key).value.trim();
+  if (val) { localStorage.setItem('gb_cfg_'+key, val); alert('✅ သိမ်းပြီးပါပြီ! index.html ဖိုင်တွင် ထည့်ရန် မမေ့ပါနှင့်'); }
+}
+
+// Load saved ad codes
+window.onload = () => {
+  ['ad-top','ad-side1','ad-side2','ad-mid'].forEach(id=>{
+    const saved = localStorage.getItem('gb_'+id);
+    if (saved) document.getElementById(id).value=saved;
+  });
+  const apikey = localStorage.getItem('gb_cfg_apikey');
+  if (apikey) document.getElementById('cfg-apikey').value=apikey;
+};
+</script>
+</body>
+</html>
